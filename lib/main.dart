@@ -40,24 +40,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<List<SearchEntry>> getData() async {
-    String link =
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating";
+  Future<List> getRest(String link) async {
     var res = await http.get(Uri.encodeFull(link),
         headers: {"Accept": "application/json", "user-key": apiKey});
-    // print(res.body);
+    print(res.body);
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       // print(data);
       var rest = data as List;
       print(rest);
-      List<SearchEntry> list;
-      list =
-          rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
-      print("List Size: ${list.length}");
-
-      return list;
+      return rest;
     }
+  }
+
+  getSearch() async {
+    var rest = await getRest(
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating");
+
+    List<SearchEntry> list =
+        rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
+    print("List Size: ${list.length}");
+    return list;
   }
 
   @override
@@ -67,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: FutureBuilder(
-          future: getData(),
+          future: getSearch(),
           builder: (context, snapshot) {
             var searchEntry = snapshot.data as List<SearchEntry>;
             return snapshot.data == null
@@ -77,12 +80,51 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemCount: searchEntry.length,
                         padding: const EdgeInsets.all(2.0),
                         itemBuilder: (context, index) {
+                          // return Container(
+                          //   decoration: BoxDecoration(
+                          //     image: DecorationImage(image:NetworkImage(
+                          //         'https://placeimg.com/640/480/any',
+                          //       ),
+                          //         fit: BoxFit.cover,
+                          //       ),
+                          //   ),
+                          // child:Text("hello"));
                           return Card(
-                              child: ListTile(
-                            title: Text(
-                              searchEntry[index].name,
+                            // semanticContainer: true,
+                            // clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    'https://placeimg.com/640/480/any',
+                                  ),
+                                  fit: BoxFit.fitWidth,
+                                  alignment: Alignment.topCenter,
+                                ),
+                              ),
+                              child: Text(searchEntry[index].name),
                             ),
-                          ));
+                            // Stack(
+                            //   children: <Widget>[
+                            //     Image.network(
+                            //       'https://placeimg.com/640/480/any',
+                            //       fit: BoxFit.fitWidth,
+                            //     ),
+
+                            //     ListTile(
+                            //   title: Text(
+                            //     searchEntry[index].name,
+                            //   ),
+                            //   trailing: Text("ok"),
+                            // )
+                            // ],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            elevation: 5,
+                            margin: EdgeInsets.all(10),
+                          );
                         }),
                   );
           }),
