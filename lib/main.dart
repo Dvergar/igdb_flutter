@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   colorFilter: ColorFilter.mode(
                                       Colors.grey, BlendMode.darken),
                                   image: NetworkImage(
-                                      'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshots[0]["image_id"]}.jpg'),
+                                      'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshot}.jpg'),
                                   fit: BoxFit.fitWidth,
                                   alignment: Alignment.topCenter,
                                 ),
@@ -143,7 +143,7 @@ class SearchEntry {
   String name;
   double rating;
   int id;
-  List screenshots;
+  String screenshot;
   List releaseDates;
   int platformID;
 
@@ -151,30 +151,22 @@ class SearchEntry {
       {this.name,
       this.rating,
       this.id,
-      this.screenshots,
+      this.screenshot,
       this.platformID,
       this.releaseDates});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
+    getFirstFromList(list) {
+      return list[0]['image_id'];
+    }
+
     return SearchEntry(
       name: json["name"],
       rating: json["rating"],
       id: json["id"],
-      screenshots: json["screenshots"],
+      screenshot: getFirstFromList(json["screenshots"]),
       releaseDates: json["release_dates"],
       platformID: json["platform"],
-    );
-  }
-}
-
-class Artwork {
-  String url;
-
-  Artwork({this.url});
-
-  factory Artwork.fromJson(Map<String, dynamic> json) {
-    return Artwork(
-      url: json["url"] as String,
     );
   }
 }
