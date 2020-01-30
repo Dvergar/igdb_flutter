@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   getSearch() async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots.image_id,release_dates.date");
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
@@ -91,9 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemCount: searchEntry.length,
                         padding: const EdgeInsets.all(2.0),
                         itemBuilder: (context, index) {
+                          var releasedYear =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      searchEntry[index].releaseDates[0]
+                                              ['date'] *
+                                          1000)
+                                  .year
+                                  .toString();
                           return Card(
                             child: Container(
-                              height: 100,
+                              padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   colorFilter: ColorFilter.mode(
@@ -105,22 +112,38 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      searchEntry[index].name,
-                                      style: TextStyle(fontSize: 25),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                  Text(
+                                    searchEntry[index].name,
+                                    style: TextStyle(fontSize: 25),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  Text(DateTime.fromMillisecondsSinceEpoch(
-                                          searchEntry[index].releaseDates[0]
-                                                  ['date'] *
-                                              1000)
-                                      .year
-                                      .toString())
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      InputChip(
+                                        backgroundColor: Colors.black,
+                                        // avatar: Icon(Icons.av_timer),
+                                        label: Text(
+                                          searchEntry[index].platform,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                      InputChip(
+                                        backgroundColor: Colors.black,
+                                        // avatar: Icon(Icons.av_timer),
+                                        label: Text(
+                                          releasedYear,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -145,19 +168,41 @@ class SearchEntry {
   int id;
   String screenshot;
   List releaseDates;
-  int platformID;
+  String platform;
 
   SearchEntry(
       {this.name,
       this.rating,
       this.id,
       this.screenshot,
-      this.platformID,
+      this.platform,
       this.releaseDates});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
     getFirstFromList(list) {
       return list[0]['image_id'];
+    }
+
+    // TODO: Refactor in a functional way
+    getPlatform(list) {
+      var abbreviation = "N/A";
+      var date = 9999999999999999;
+
+      for (var platform in list) {
+        for (var version in platform['versions']) {
+          if (version['platform_version_release_dates'] != null) {
+            int currentDate =
+                version['platform_version_release_dates'][0]['date'];
+
+            if (currentDate < date) {
+              abbreviation = platform['abbreviation'];
+              date = currentDate;
+            }
+          }
+        }
+      }
+
+      return abbreviation;
     }
 
     return SearchEntry(
@@ -166,7 +211,7 @@ class SearchEntry {
       id: json["id"],
       screenshot: getFirstFromList(json["screenshots"]),
       releaseDates: json["release_dates"],
-      platformID: json["platform"],
+      platform: getPlatform(json["platforms"]),
     );
   }
 }
