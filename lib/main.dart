@@ -27,8 +27,7 @@ class MyApp extends StatelessWidget {
             : MaterialApp(
                 title: 'IGDB Flutter',
                 theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
+                    primarySwatch: Colors.blue, brightness: Brightness.dark),
                 home: MyHomePage(title: 'IGDB Flutter'),
               );
       },
@@ -67,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   getSearch() async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots");
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots,release_dates.date");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
@@ -83,6 +82,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/$screenshotName.jpg';
     // return 'https://placeimg.com/640/480/any';
+  }
+
+    Future<String> getPlatform(int id) async {
+    print("GETPLATFORM");
+    var rest = await getRest(
+        "https://api-v3.igdb.com/platforms/$id?fields=name");
+    // var screenshotName = rest[0]['image_id'];
+
+    // return rest[0]['name'];
+    // return 'https://placeimg.com/640/480/any';
+    return "Game boy";
   }
 
   @override
@@ -113,6 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         height: 100,
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                                Colors.grey, BlendMode.darken),
                                             image: NetworkImage(
                                               snapshot.data,
                                             ),
@@ -122,7 +134,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                         child: Column(
                                           children: <Widget>[
-                                            Text(searchEntry[index].name),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                searchEntry[index].name,
+                                                style: TextStyle(fontSize: 25),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Text(DateTime.fromMillisecondsSinceEpoch(searchEntry[index].releaseDates[0]['date'] * 1000).year.toString())
                                           ],
                                         ),
                                       );
@@ -148,8 +170,11 @@ class SearchEntry {
   double rating;
   int id;
   List screenshots;
+  List releaseDates;
+  int platformID;
 
-  SearchEntry({this.name, this.rating, this.id, this.screenshots});
+  SearchEntry(
+      {this.name, this.rating, this.id, this.screenshots, this.platformID, this.releaseDates});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
     return SearchEntry(
@@ -157,6 +182,8 @@ class SearchEntry {
       rating: json["rating"],
       id: json["id"],
       screenshots: json["screenshots"],
+      releaseDates: json["release_dates"],
+      platformID: json["platform"],
     );
   }
 }
