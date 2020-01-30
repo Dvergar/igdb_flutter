@@ -66,33 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
   getSearch() async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots,release_dates.date");
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots.image_id,release_dates.date");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
     print("List Size: ${list.length}");
     return list;
-  }
-
-  Future<String> getCover(List<dynamic> ids) async {
-    print("GETCOVER");
-    var rest = await getRest(
-        "https://api-v3.igdb.com/screenshots/${ids.first}?fields=url,image_id");
-    var screenshotName = rest[0]['image_id'];
-
-    return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/$screenshotName.jpg';
-    // return 'https://placeimg.com/640/480/any';
-  }
-
-    Future<String> getPlatform(int id) async {
-    print("GETPLATFORM");
-    var rest = await getRest(
-        "https://api-v3.igdb.com/platforms/$id?fields=name");
-    // var screenshotName = rest[0]['image_id'];
-
-    // return rest[0]['name'];
-    // return 'https://placeimg.com/640/480/any';
-    return "Game boy";
   }
 
   @override
@@ -113,42 +92,37 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.all(2.0),
                         itemBuilder: (context, index) {
                           return Card(
-                            child: FutureBuilder(
-                              future: getCover(searchEntry[index].screenshots),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                return snapshot.data == null
-                                    ? Container()
-                                    : Container(
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            colorFilter: ColorFilter.mode(
-                                                Colors.grey, BlendMode.darken),
-                                            image: NetworkImage(
-                                              snapshot.data,
-                                            ),
-                                            fit: BoxFit.fitWidth,
-                                            alignment: Alignment.topCenter,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                searchEntry[index].name,
-                                                style: TextStyle(fontSize: 25),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            Text(DateTime.fromMillisecondsSinceEpoch(searchEntry[index].releaseDates[0]['date'] * 1000).year.toString())
-                                          ],
-                                        ),
-                                      );
-                              },
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.grey, BlendMode.darken),
+                                  image: NetworkImage(
+                                      'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshots[0]["image_id"]}.jpg'),
+                                  fit: BoxFit.fitWidth,
+                                  alignment: Alignment.topCenter,
+                                ),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      searchEntry[index].name,
+                                      style: TextStyle(fontSize: 25),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Text(DateTime.fromMillisecondsSinceEpoch(
+                                          searchEntry[index].releaseDates[0]
+                                                  ['date'] *
+                                              1000)
+                                      .year
+                                      .toString())
+                                ],
+                              ),
                             ),
 
                             // Stack(
@@ -174,7 +148,12 @@ class SearchEntry {
   int platformID;
 
   SearchEntry(
-      {this.name, this.rating, this.id, this.screenshots, this.platformID, this.releaseDates});
+      {this.name,
+      this.rating,
+      this.id,
+      this.screenshots,
+      this.platformID,
+      this.releaseDates});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
     return SearchEntry(
