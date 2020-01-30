@@ -11,21 +11,27 @@ Future<String> loadAPIKey() async {
 
 void main() {
   runApp(MyApp());
-  loadAPIKey().then((data) {
-    apiKey = data;
-    print('API Key is $apiKey');
-  });
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'IGDB Flutter',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'IGDB Flutter'),
+    return FutureBuilder(
+      future: loadAPIKey(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          apiKey = snapshot.data;
+        }
+        return snapshot.data == null
+            ? Center(child: CircularProgressIndicator())
+            : MaterialApp(
+                title: 'IGDB Flutter',
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                ),
+                home: MyHomePage(title: 'IGDB Flutter'),
+              );
+      },
     );
   }
 }
@@ -40,6 +46,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<List> getRest(String link) async {
     var res = await http.get(Uri.encodeFull(link),
         headers: {"Accept": "application/json", "user-key": apiKey});
@@ -54,13 +65,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   getSearch() async {
+    print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating");
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
     print("List Size: ${list.length}");
     return list;
+  }
+
+  Future<String> getCover(List<dynamic> ids) async {
+    print("GETCOVER");
+    var rest = await getRest(
+        "https://api-v3.igdb.com/screenshots/${ids.first}?fields=url,image_id");
+    var screenshotName = rest[0]['image_id'];
+
+    return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/$screenshotName.jpg';
+    // return 'https://placeimg.com/640/480/any';
   }
 
   @override
@@ -80,45 +102,34 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemCount: searchEntry.length,
                         padding: const EdgeInsets.all(2.0),
                         itemBuilder: (context, index) {
-                          // return Container(
-                          //   decoration: BoxDecoration(
-                          //     image: DecorationImage(image:NetworkImage(
-                          //         'https://placeimg.com/640/480/any',
-                          //       ),
-                          //         fit: BoxFit.cover,
-                          //       ),
-                          //   ),
-                          // child:Text("hello"));
                           return Card(
-                            // semanticContainer: true,
-                            // clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    'https://placeimg.com/640/480/any',
-                                  ),
-                                  fit: BoxFit.fitWidth,
-                                  alignment: Alignment.topCenter,
-                                ),
-                              ),
-                              child: Text(searchEntry[index].name),
+                            child: FutureBuilder(
+                              future: getCover(searchEntry[index].screenshots),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                return snapshot.data == null
+                                    ? Container()
+                                    : Container(
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              snapshot.data,
+                                            ),
+                                            fit: BoxFit.fitWidth,
+                                            alignment: Alignment.topCenter,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(searchEntry[index].name),
+                                          ],
+                                        ),
+                                      );
+                              },
                             ),
-                            // Stack(
-                            //   children: <Widget>[
-                            //     Image.network(
-                            //       'https://placeimg.com/640/480/any',
-                            //       fit: BoxFit.fitWidth,
-                            //     ),
 
-                            //     ListTile(
-                            //   title: Text(
-                            //     searchEntry[index].name,
-                            //   ),
-                            //   trailing: Text("ok"),
-                            // )
-                            // ],
+                            // Stack(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -135,10 +146,29 @@ class _MyHomePageState extends State<MyHomePage> {
 class SearchEntry {
   String name;
   double rating;
+  int id;
+  List screenshots;
 
-  SearchEntry({this.name, this.rating});
+  SearchEntry({this.name, this.rating, this.id, this.screenshots});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
-    return SearchEntry(name: json["name"], rating: json["rating"]);
+    return SearchEntry(
+      name: json["name"],
+      rating: json["rating"],
+      id: json["id"],
+      screenshots: json["screenshots"],
+    );
+  }
+}
+
+class Artwork {
+  String url;
+
+  Artwork({this.url});
+
+  factory Artwork.fromJson(Map<String, dynamic> json) {
+    return Artwork(
+      url: json["url"] as String,
+    );
   }
 }
