@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   getSearch() async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation");
+        "https://api-v3.igdb.com/games/?search=zelda&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
@@ -80,86 +80,119 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: FutureBuilder(
-          future: getSearch(),
-          builder: (context, snapshot) {
-            var searchEntry = snapshot.data as List<SearchEntry>;
-            return snapshot.data == null
-                ? Center(child: CircularProgressIndicator())
-                : Container(
-                    child: ListView.builder(
-                        itemCount: searchEntry.length,
-                        padding: const EdgeInsets.all(2.0),
-                        itemBuilder: (context, index) {
-                          var releasedYear =
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      searchEntry[index].releaseDates[0]
-                                              ['date'] *
-                                          1000)
-                                  .year
-                                  .toString();
-                          return Card(
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  colorFilter: ColorFilter.mode(
-                                      Colors.grey, BlendMode.darken),
-                                  image: NetworkImage(
-                                      'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshot}.jpg'),
-                                  fit: BoxFit.fitWidth,
-                                  alignment: Alignment.topCenter,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    searchEntry[index].name,
-                                    style: TextStyle(fontSize: 25),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      InputChip(
-                                        backgroundColor: Colors.black,
-                                        // avatar: Icon(Icons.av_timer),
-                                        label: Text(
-                                          searchEntry[index].platform,
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                        onPressed: () {},
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                color: Color(0xff424242),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                      hintText: "SEARCH GAMES",
+                      hintStyle: TextStyle(fontSize: 20)),
+                )),
+          ),
+          Expanded(
+            child: FutureBuilder(
+                future: getSearch(),
+                builder: (context, snapshot) {
+                  var searchEntry = snapshot.data as List<SearchEntry>;
+                  return snapshot.data == null
+                      ? Center(child: CircularProgressIndicator())
+                      : Container(
+                          child: ListView.builder(
+                              itemCount: searchEntry.length,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              itemBuilder: (context, index) {
+                                var releasedYear =
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                            searchEntry[index].releaseDates[0]
+                                                    ['date'] *
+                                                1000)
+                                        .year
+                                        .toString();
+                                return Card(
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        colorFilter: ColorFilter.mode(
+                                            Colors.grey, BlendMode.darken),
+                                        image: NetworkImage(
+                                            'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshot}.jpg'),
+                                        fit: BoxFit.fitWidth,
+                                        alignment: Alignment.topCenter,
                                       ),
-                                      InputChip(
-                                        backgroundColor: Colors.black,
-                                        // avatar: Icon(Icons.av_timer),
-                                        label: Text(
-                                          releasedYear,
-                                          style: TextStyle(fontSize: 15),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          searchEntry[index].name,
+                                          style: TextStyle(fontSize: 25),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        onPressed: () {},
-                                      ),
-                                    ],
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            InputChip(
+                                              backgroundColor: Colors.amber,
+                                              // avatar: Icon(Icons.av_timer),
+                                              label: Text(
+                                                searchEntry[index]
+                                                    .platform
+                                                    .name,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                            InputChip(
+                                              backgroundColor: Colors.black,
+                                              // avatar: Icon(Icons.av_timer),
+                                              label: Text(
+                                                releasedYear,
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
-                            ),
 
-                            // Stack(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            elevation: 5,
-                            margin: EdgeInsets.all(10),
-                          );
-                        }),
-                  );
-          }),
+                                  // Stack(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  elevation: 5,
+                                  margin: EdgeInsets.all(10),
+                                );
+                              }),
+                        );
+                }),
+          ),
+        ],
+      ),
     );
   }
+}
+
+class Platform {
+  String name;
+  String logo;
+
+  Platform({this.name, this.logo});
 }
 
 class SearchEntry {
@@ -168,7 +201,7 @@ class SearchEntry {
   int id;
   String screenshot;
   List releaseDates;
-  String platform;
+  Platform platform;
 
   SearchEntry(
       {this.name,
@@ -186,6 +219,7 @@ class SearchEntry {
     // TODO: Refactor in a functional way
     getPlatform(list) {
       var abbreviation = "N/A";
+      var logo = "";
       var date = 9999999999999999;
 
       for (var platform in list) {
@@ -197,12 +231,14 @@ class SearchEntry {
             if (currentDate < date) {
               abbreviation = platform['abbreviation'];
               date = currentDate;
+              logo = platform['platform_logo']['image_id'];
             }
           }
         }
       }
+      print("LOGO $logo");
 
-      return abbreviation;
+      return Platform(name: abbreviation, logo: logo);
     }
 
     return SearchEntry(
