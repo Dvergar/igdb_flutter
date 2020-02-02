@@ -84,12 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   const EdgeInsets.symmetric(vertical: 2.0),
                               itemBuilder: (context, index) {
                                 var releasedYear =
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                            searchEntry[index].releaseDates[0]
-                                                    ['date'] *
-                                                1000)
-                                        .year
-                                        .toString();
+                                    searchEntry[index].releaseDate;
+
                                 return Card(
                                   child: Container(
                                     padding: EdgeInsets.all(8),
@@ -98,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         colorFilter: ColorFilter.mode(
                                             Colors.grey, BlendMode.darken),
                                         image: NetworkImage(
-                                            'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${searchEntry[index].screenshot}.jpg'),
+                                            searchEntry[index].screenshot),
                                         fit: BoxFit.fitWidth,
                                         alignment: Alignment.topCenter,
                                       ),
