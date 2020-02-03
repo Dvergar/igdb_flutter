@@ -4,11 +4,9 @@ import 'package:http/http.dart' as http;
 import 'main.dart';
 
 class SearchBloc {
-  final searchController =
-      StreamController.broadcast(); // create a StreamController
+  final searchController = StreamController.broadcast();
 
-  Stream get stream =>
-      searchController.stream; // create a getter for our stream
+  Stream get stream => searchController.stream;
 
   void search(String entry) {
     getSearch(entry).then((entries) => searchController.sink.add(entries));
@@ -20,7 +18,6 @@ class SearchBloc {
     print("body ${res.body}");
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
-      // print(data);
       var rest = data as List;
       print(rest);
       return rest;
@@ -31,7 +28,7 @@ class SearchBloc {
   Future<List<SearchEntry>> getSearch(String gameName) async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
+        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
@@ -55,23 +52,13 @@ class Platform {
 
 class SearchEntry {
   String name;
-  double rating;
   int id;
-  String screenshot;
   String releaseDate;
   Platform platform;
-  String cover;
   String banner;
 
   SearchEntry(
-      {this.name,
-      this.rating,
-      this.id,
-      this.screenshot = "pl73",
-      this.platform,
-      this.cover,
-      this.banner,
-      this.releaseDate});
+      {this.name, this.id, this.platform, this.banner, this.releaseDate});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
     getPlatform(list) {
@@ -124,9 +111,7 @@ class SearchEntry {
 
     return SearchEntry(
       name: json["name"],
-      rating: json["rating"],
       id: json["id"],
-      // screenshot: getFirstScreenshot(json["screenshots"]),
       releaseDate: getReleaseDate(json["release_dates"]),
       banner: getBanner(json),
       platform: getPlatform(json["platforms"]),
