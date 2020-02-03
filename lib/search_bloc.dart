@@ -31,7 +31,7 @@ class SearchBloc {
   Future<List<SearchEntry>> getSearch(String gameName) async {
     print("getSearch");
     var rest = await getRest(
-        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id");
+        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,rating,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
 
     List<SearchEntry> list =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
@@ -60,6 +60,7 @@ class SearchEntry {
   String screenshot;
   String releaseDate;
   Platform platform;
+  String cover;
 
   SearchEntry(
       {this.name,
@@ -67,6 +68,7 @@ class SearchEntry {
       this.id,
       this.screenshot = "pl73",
       this.platform,
+      this.cover,
       this.releaseDate});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
@@ -74,10 +76,10 @@ class SearchEntry {
       print("first from $list");
       return list != null
           ? 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${list[0]['image_id']}.jpg'
-          : 'https://via.placeholder.com/150/FFFF00/000000';
+          : null;
+      // : 'https://via.placeholder.com/150/FFFF00/000000';
     }
 
-    // TODO: Refactor in a functional way
     getPlatform(list) {
       var abbreviation = "N/A";
       var logo = "";
@@ -99,7 +101,6 @@ class SearchEntry {
           }
         }
       }
-      print("LOGO $logo");
 
       return Platform(name: abbreviation, logo: logo);
     }
@@ -112,12 +113,19 @@ class SearchEntry {
           : "N/A";
     }
 
+    getCover(Map<String, dynamic> cover) {
+      return cover != null
+          ? 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${json["cover"]["image_id"]}.jpg'
+          : null;
+    }
+
     return SearchEntry(
       name: json["name"],
       rating: json["rating"],
       id: json["id"],
       screenshot: getFirstScreenshot(json["screenshots"]),
       releaseDate: getReleaseDate(json["release_dates"]),
+      cover: getCover(json["cover"]),
       platform: getPlatform(json["platforms"]),
     );
   }

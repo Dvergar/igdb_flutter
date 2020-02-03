@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         colorFilter: ColorFilter.mode(
                                             Colors.grey, BlendMode.darken),
                                         image: NetworkImage(
-                                            searchEntry[index].screenshot),
+                                            searchEntry[index].screenshot ?? searchEntry[index].cover ?? 'https://via.placeholder.com/150/FFFF00/000000'),
                                         fit: BoxFit.fitWidth,
                                         alignment: Alignment.topCenter,
                                       ),
