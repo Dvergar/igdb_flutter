@@ -44,7 +44,8 @@ class _GameState extends State<Game> {
                   ),
                 ),
                 child: SafeArea(
-                  child: Column(
+                  child: ListView(
+                    shrinkWrap: true,
                     children: <Widget>[
                       Hero(
                           tag: "game-name-${widget.index}",
@@ -63,9 +64,10 @@ class _GameState extends State<Game> {
                           if (gameEntry.rating > 39)
                             ratingColor = Colors.orange;
                           if (gameEntry.rating > 59) ratingColor = Colors.green;
-                          
+
                           return Column(
                             children: <Widget>[
+                              SizedBox(height:20),
                               CircularPercentIndicator(
                                 radius: 120.0,
                                 lineWidth: 13.0,
@@ -86,7 +88,11 @@ class _GameState extends State<Game> {
                                 circularStrokeCap: CircularStrokeCap.round,
                                 progressColor: ratingColor,
                               ),
-                              Text(gameEntry.summary)
+                              SizedBox(height:20),
+                              Container(
+                                padding: EdgeInsets.all(15),
+                                color: Colors.black.withOpacity(0.8),
+                                child: Text(gameEntry.summary, style: TextStyle(fontSize:20),))
                             ],
                           );
                         },
