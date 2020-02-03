@@ -30,10 +30,10 @@ class SearchBloc {
     var rest = await getRest(
         "https://api-v3.igdb.com/games/?search=$gameName&fields=name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
 
-    List<SearchEntry> list =
+    List<SearchEntry> searchEntries =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
-    print("List Size: ${list.length}");
-    return list;
+    print("List Size: ${searchEntries.length}");
+    return searchEntries;
   }
 
   void dispose() {
