@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:igdb_flutter/game.dart';
 import 'search_bloc.dart';
 
 var apiKey = "";
@@ -51,119 +52,149 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          children: <Widget>[
-            Container(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18.0),
-                    color: Color(0xff424242)),
-                child: TextField(
-                  onSubmitted: (entry) => searchBloc.search(entry),
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      icon: Icon(Icons.search),
-                      hintText: "SEARCH GAMES",
-                      hintStyle: TextStyle(fontSize: 20)),
-                )),
-                SizedBox(height:20),
-            Expanded(
-              child: StreamBuilder(
-                  stream: searchBloc.stream,
-                  builder: (context, snapshot) {
-                    var searchEntry = snapshot.data as List<SearchEntry>;
-                    return snapshot.data == null
-                        ? Center(child: CircularProgressIndicator())
-                        : Container(
-                            child: ListView.builder(
-                                itemCount: searchEntry.length,
-                                itemBuilder: (context, index) {
-                                  var releasedYear =
-                                      searchEntry[index].releaseDate;
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      // ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18.0),
+                      color: Color(0xff424242)),
+                  child: TextField(
+                    onSubmitted: (entry) => searchBloc.search(entry),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        icon: Icon(Icons.search),
+                        hintText: "SEARCH GAMES",
+                        hintStyle: TextStyle(fontSize: 20)),
+                  )),
+              SizedBox(height: 20),
+              Expanded(
+                child: StreamBuilder(
+                    stream: searchBloc.stream,
+                    builder: (context, snapshot) {
+                      var searchEntry = snapshot.data as List<SearchEntry>;
+                      return snapshot.data == null
+                          ? Center(child: CircularProgressIndicator())
+                          : Container(
+                              child: ListView.builder(
+                                  itemCount: searchEntry.length,
+                                  itemBuilder: (context, index) {
+                                    var releasedYear =
+                                        searchEntry[index].releaseDate;
+                                    var cover = searchEntry[index].screenshot ??
+                                        searchEntry[index].cover ??
+                                        'https://via.placeholder.com/150/FFFF00/000000';
 
-                                  return Card(
-                                    child: Container(
-                                      height: 120,
-                                      padding: EdgeInsets.all(9),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                        image: DecorationImage(
-                                          colorFilter: ColorFilter.mode(
-                                              Colors.grey, BlendMode.darken),
-                                          image: NetworkImage(searchEntry[index]
-                                                  .screenshot ??
-                                              searchEntry[index].cover ??
-                                              'https://via.placeholder.com/150/FFFF00/000000'),
-                                          fit: BoxFit.cover,
-                                          alignment: Alignment.topCenter,
-                                        ),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            searchEntry[index].name,
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w600),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                    return GestureDetector(
+                                      onTap: () {
+                                        print("ok");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Game(
+                                                  cover: cover,
+                                                  name: searchEntry[index].name,
+                                                  index: index)),
+                                        );
+                                      },
+                                      child: Card(
+                                        child: Container(
+                                          height: 120,
+                                          padding: EdgeInsets.all(9),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                            image: DecorationImage(
+                                              colorFilter: ColorFilter.mode(
+                                                  Colors.grey,
+                                                  BlendMode.darken),
+                                              image: NetworkImage(cover),
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.topCenter,
+                                            ),
                                           ),
-                                          Row(
+                                          child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              InputChip(
-                                                backgroundColor: Colors.amber,
-                                                // avatar: Icon(Icons.av_timer),
-                                                label: Text(
-                                                  searchEntry[index]
-                                                      .platform
-                                                      .name,
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                              Hero(
+                                                tag: "game-name-$index",
+                                                child: Material(
+                                                  type:
+                                                      MaterialType.transparency,
+                                                  child: Text(
+                                                    searchEntry[index].name,
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
-                                                onPressed: () {},
                                               ),
-                                              InputChip(
-                                                backgroundColor: Colors.black,
-                                                // avatar: Icon(Icons.av_timer),
-                                                label: Text(
-                                                  releasedYear,
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                                onPressed: () {},
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  InputChip(
+                                                    backgroundColor:
+                                                        Colors.amber,
+                                                    // avatar: Icon(Icons.av_timer),
+                                                    label: Text(
+                                                      searchEntry[index]
+                                                          .platform
+                                                          .name,
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                  InputChip(
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                    // avatar: Icon(Icons.av_timer),
+                                                    label: Text(
+                                                      releasedYear,
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
 
-                                    // Stack(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    ),
-                                    elevation: 5,
-                                    margin: EdgeInsets.symmetric(vertical: 10),
-                                  );
-                                }),
-                          );
-                  }),
-            ),
-          ],
+                                        // Stack(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                        ),
+                                        elevation: 5,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                    );
+                                  }),
+                            );
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );
