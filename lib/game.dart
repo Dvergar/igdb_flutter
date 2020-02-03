@@ -56,12 +56,14 @@ class _GameState extends State<Game> {
                         stream: gameBloc.stream,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
+                          if (!snapshot.hasData) return Container();
+
                           var gameEntry = snapshot.data as GameEntry;
                           var ratingColor = Colors.red;
                           if (gameEntry.rating > 39)
                             ratingColor = Colors.orange;
                           if (gameEntry.rating > 59) ratingColor = Colors.green;
-                          if (!snapshot.hasData) return Container();
+                          
                           return Column(
                             children: <Widget>[
                               CircularPercentIndicator(
@@ -84,6 +86,7 @@ class _GameState extends State<Game> {
                                 circularStrokeCap: CircularStrokeCap.round,
                                 progressColor: ratingColor,
                               ),
+                              Text(gameEntry.summary)
                             ],
                           );
                         },

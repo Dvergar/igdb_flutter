@@ -24,7 +24,9 @@ class GameBloc {
   getGame(int gameId) async {
     print("getGame");
     var rest =
-        await getRest("https://api-v3.igdb.com/games/$gameId?fields=rating");
+        await getRest("https://api-v3.igdb.com/games/$gameId?fields=rating,summary");
+
+    print("REST ${rest[0]}");
 
     gameController.sink.add(GameEntry.fromJson(rest[0]));
   }
@@ -38,12 +40,14 @@ final gameBloc = GameBloc();
 
 class GameEntry {
   double rating;
+  String summary;
 
-  GameEntry({this.rating});
+  GameEntry({this.rating, this.summary});
 
   factory GameEntry.fromJson(Map<String, dynamic> json) {
     return GameEntry(
-      rating: json["rating"],
+      rating: json["rating"] ?? 0,
+      summary: json["summary"] ?? "No summary available",
     );
   }
 }
