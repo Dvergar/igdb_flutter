@@ -87,9 +87,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   itemBuilder: (context, index) {
                                     var releasedYear =
                                         searchEntry[index].releaseDate;
-                                    var cover = searchEntry[index].screenshot ??
-                                        searchEntry[index].cover ??
-                                        'https://via.placeholder.com/150/FFFF00/000000';
+                                    // var cover = searchEntry[index].screenshot ??
+                                    //     searchEntry[index].cover ??
+                                    //     'https://via.placeholder.com/150/FFFF00/000000';
 
                                     return GestureDetector(
                                       onTap: () {
@@ -98,8 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Game(
-                                                  cover: cover,
-                                                  name: searchEntry[index].name,
+                                                  entry:searchEntry[index],
                                                   index: index)),
                                         );
                                       },
@@ -114,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               colorFilter: ColorFilter.mode(
                                                   Colors.grey,
                                                   BlendMode.darken),
-                                              image: NetworkImage(cover),
+                                              image: NetworkImage(searchEntry[index].banner),
                                               fit: BoxFit.cover,
                                               alignment: Alignment.topCenter,
                                             ),

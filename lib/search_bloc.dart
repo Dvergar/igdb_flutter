@@ -61,6 +61,7 @@ class SearchEntry {
   String releaseDate;
   Platform platform;
   String cover;
+  String banner;
 
   SearchEntry(
       {this.name,
@@ -69,17 +70,10 @@ class SearchEntry {
       this.screenshot = "pl73",
       this.platform,
       this.cover,
+      this.banner,
       this.releaseDate});
 
   factory SearchEntry.fromJson(Map<String, dynamic> json) {
-    getFirstScreenshot(list) {
-      print("first from $list");
-      return list != null
-          ? 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${list[0]['image_id']}.jpg'
-          : null;
-      // : 'https://via.placeholder.com/150/FFFF00/000000';
-    }
-
     getPlatform(list) {
       var abbreviation = "N/A";
       var logo = "";
@@ -113,19 +107,28 @@ class SearchEntry {
           : "N/A";
     }
 
-    getCover(Map<String, dynamic> cover) {
-      return cover != null
-          ? 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${json["cover"]["image_id"]}.jpg'
-          : null;
+    getBanner(Map<String, dynamic> json) {
+      // SCREENSHOT
+      var screenshots = json["screenshots"];
+      if (screenshots != null)
+        return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${screenshots[0]['image_id']}.jpg';
+
+      // OR COVER
+      var cover = json["cover"];
+      if (cover != null)
+        return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${cover["image_id"]}.jpg';
+
+      // OR PLACEHOLDER
+      return 'https://via.placeholder.com/150/FFFF00/000000';
     }
 
     return SearchEntry(
       name: json["name"],
       rating: json["rating"],
       id: json["id"],
-      screenshot: getFirstScreenshot(json["screenshots"]),
+      // screenshot: getFirstScreenshot(json["screenshots"]),
       releaseDate: getReleaseDate(json["release_dates"]),
-      cover: getCover(json["cover"]),
+      banner: getBanner(json),
       platform: getPlatform(json["platforms"]),
     );
   }

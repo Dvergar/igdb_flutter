@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:igdb_flutter/search_bloc.dart';
 
 class Game extends StatefulWidget {
   int index;
-  String cover;
-  String name;
-  Game({Key key, this.cover, this.name, this.index}) : super(key: key);
+  SearchEntry entry;
+  Game({Key key, this.entry, this.index}) : super(key: key);
 
   @override
   _GameState createState() => _GameState();
@@ -30,7 +30,7 @@ class _GameState extends State<Game> {
                   image: DecorationImage(
                     colorFilter:
                         ColorFilter.mode(Colors.grey, BlendMode.darken),
-                    image: NetworkImage(widget.cover),
+                    image: NetworkImage(widget.entry.banner),
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   ),
@@ -40,7 +40,7 @@ class _GameState extends State<Game> {
                       tag: "game-name-${widget.index}",
                       child: Material(
                           type: MaterialType.transparency,
-                          child: Text(widget.name,
+                          child: Text(widget.entry.name,
                               style: TextStyle(fontSize: 30)))),
                 )),
           ),
