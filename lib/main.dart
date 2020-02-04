@@ -51,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    const searchStyle = TextStyle(fontSize: 20);
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(widget.title),
@@ -67,11 +69,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Color(0xff424242)),
                   child: TextField(
                     onSubmitted: (entry) => searchBloc.search(entry),
+                    style: searchStyle,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(Icons.search),
                         hintText: "SEARCH GAMES",
-                        hintStyle: TextStyle(fontSize: 20)),
+                        hintStyle: searchStyle,
+                        labelStyle: searchStyle,
+                        ),
                   )),
               SizedBox(height: 20),
               Expanded(
@@ -87,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   itemBuilder: (context, index) {
                                     var releasedYear =
                                         searchEntry[index].releaseDate;
+                                        var deb = searchEntry[index]
+                                                          .platform
+                                                          ;
+                                                          print("DEBUUUUUUUUUUUG $deb");
 
                                     return GestureDetector(
                                       onTap: () {

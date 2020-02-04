@@ -75,7 +75,7 @@ class SearchEntry {
                 version['platform_version_release_dates'][0]['date'];
 
             if (currentDate < date) {
-              abbreviation = platform['abbreviation'];
+              abbreviation = platform['abbreviation'] ?? abbreviation;
               date = currentDate;
               // logo = platform['platform_logo']['image_id'];
             }

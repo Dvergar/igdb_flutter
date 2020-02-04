@@ -141,10 +141,6 @@ class _GameState extends State<Game> {
                                     text: gameEntry.summary,
                                     summaryLength: 200,
                                     style: TextStyle(fontSize: 20))
-                                // Text(
-                                //   gameEntry.summary,
-                                //   style: TextStyle(fontSize: 20),
-                                // )
                                 )
                           ],
                         );
