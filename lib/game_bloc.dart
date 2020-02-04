@@ -46,14 +46,15 @@ class GameEntry {
   GameEntry({this.rating, this.summary, this.genres});
 
   factory GameEntry.fromJson(Map<String, dynamic> json) {
-    getGenres(List<dynamic> jsonGenres) {
+    List<String> getGenres(List<dynamic> jsonGenres) {
+      if(jsonGenres == null) return [];
       return jsonGenres.map<String>((json) => json['name']).toList();
     }
 
     return GameEntry(
       rating: json["rating"] ?? 0,
       summary: json["summary"] ?? "No summary available",
-      genres: getGenres(json["genres"]) ?? [],
+      genres: getGenres(json["genres"]),
     );
   }
 }
