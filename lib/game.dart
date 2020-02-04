@@ -137,10 +137,15 @@ class _GameState extends State<Game> {
                             Container(
                                 padding: EdgeInsets.all(15),
                                 color: Colors.black,
-                                child: Text(
-                                  gameEntry.summary,
-                                  style: TextStyle(fontSize: 20),
-                                ))
+                                child: DescriptionTextWidget(
+                                    text: gameEntry.summary,
+                                    summaryLength: 200,
+                                    style: TextStyle(fontSize: 20))
+                                // Text(
+                                //   gameEntry.summary,
+                                //   style: TextStyle(fontSize: 20),
+                                // )
+                                )
                           ],
                         );
                       },
@@ -152,6 +157,73 @@ class _GameState extends State<Game> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DescriptionTextWidget extends StatefulWidget {
+  final TextStyle style;
+  final String text;
+  final int summaryLength;
+
+  DescriptionTextWidget(
+      {@required this.text,
+      this.style: const TextStyle(),
+      this.summaryLength: 50});
+
+  @override
+  _DescriptionTextWidgetState createState() =>
+      new _DescriptionTextWidgetState();
+}
+
+class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
+  String firstHalf;
+  String secondHalf;
+
+  bool flag = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.text.length > widget.summaryLength) {
+      firstHalf = widget.text.substring(0, widget.summaryLength);
+      secondHalf =
+          widget.text.substring(widget.summaryLength, widget.text.length);
+    } else {
+      firstHalf = widget.text;
+      secondHalf = "";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      padding: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      child: secondHalf.isEmpty
+          ? new Text(firstHalf, style: widget.style)
+          : new Column(
+              children: <Widget>[
+                new Text(flag ? (firstHalf + "...") : (firstHalf + secondHalf),
+                    style: widget.style),
+                new InkWell(
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      new Text(
+                        flag ? "show more" : "show less",
+                        style: new TextStyle(color: Colors.blue),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    setState(() {
+                      flag = !flag;
+                    });
+                  },
+                ),
+              ],
+            ),
     );
   }
 }
