@@ -140,9 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                               ),
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
                                                 children: <Widget>[
                                                   InputChip(
                                                     backgroundColor:
