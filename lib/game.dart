@@ -114,7 +114,7 @@ class _GameState extends State<Game> {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: InputChip(
-                                              label: Text(genre),
+                                              label: Text(genre, style: TextStyle(fontSize:16, fontWeight:FontWeight.bold),),
                                               backgroundColor: Colors.red,
                                               onPressed: () {},
                                             ),
