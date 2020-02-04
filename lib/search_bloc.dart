@@ -87,11 +87,13 @@ class SearchEntry {
     }
 
     getReleaseDate(List releaseDates) {
-      return releaseDates != null
-          ? DateTime.fromMillisecondsSinceEpoch(releaseDates[0]['date'] * 1000)
-              .year
-              .toString()
-          : "N/A";
+      print("RELDEBUG $releaseDates");
+      if (releaseDates == null) return "N/A";
+      if (releaseDates[0]['date'] == null) return "N/A";
+
+      return DateTime.fromMillisecondsSinceEpoch(releaseDates[0]['date'] * 1000)
+          .year
+          .toString();
     }
 
     getBanner(Map<String, dynamic> json) {
