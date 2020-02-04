@@ -108,7 +108,7 @@ class SearchEntry {
         return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${cover["image_id"]}.jpg';
 
       // OR PLACEHOLDER
-      return 'https://via.placeholder.com/150/FFFF00/000000';
+      return 'https://i.picsum.photos/id/15/400/200.jpg?blur=10';
     }
 
     return SearchEntry(
