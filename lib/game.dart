@@ -47,9 +47,12 @@ class _GameState extends State<Game> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                        padding: const EdgeInsets.fromLTRB(5, 10, 20, 10),
-                        child: Icon(Icons.arrow_back_ios),
-                      ),
+                          padding: const EdgeInsets.fromLTRB(5, 10, 20, 10),
+                          child: IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              })),
                       Expanded(
                         child: Hero(
                             tag: "game-name-${widget.index}",
@@ -114,7 +117,13 @@ class _GameState extends State<Game> {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: InputChip(
-                                              label: Text(genre, style: TextStyle(fontSize:16, fontWeight:FontWeight.bold),),
+                                              label: Text(
+                                                genre,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                               backgroundColor: Colors.red,
                                               onPressed: () {},
                                             ),
