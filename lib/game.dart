@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:igdb_flutter/game_bloc.dart';
 import 'package:igdb_flutter/search_bloc.dart';
@@ -21,56 +22,78 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text("hoho"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(9),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    colorFilter:
-                        ColorFilter.mode(Colors.grey, BlendMode.darken),
-                    image: NetworkImage(widget.entry.banner),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(9.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: <Widget>[
-                        Hero(
-                            tag: "game-name-${widget.index}",
-                            child: Material(
-                                type: MaterialType.transparency,
-                                child: Text(widget.entry.name,
-                                    style: TextStyle(fontSize: 30)))),
-                        StreamBuilder(
-                          stream: gameBloc.stream,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (!snapshot.hasData) return Container();
+    return Material(
+        child: StreamBuilder(
+            stream: gameBloc.stream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) return Text("loading");
 
-                            var gameEntry = snapshot.data as GameEntry;
-                            var ratingColor = Colors.red;
-                            if (gameEntry.rating > 39)
-                              ratingColor = Colors.orange;
-                            if (gameEntry.rating > 59) ratingColor = Colors.green;
+              var gameEntry = snapshot.data as GameEntry;
+              var ratingColor = Colors.red;
+              if (gameEntry.rating > 39) ratingColor = Colors.orange;
+              if (gameEntry.rating > 59) ratingColor = Colors.green;
 
-                            return Column(
+              return CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    // primary: true,
+                    pinned: true,
+                    floating: true,
+                    // snap: true,
+                    expandedHeight: 350.0,
+                    // leading: Container(),
+                    // bottom: PreferredSize(
+                    //   // Add this code
+                    //   preferredSize: Size.fromHeight(60.0), // Add this code
+                    //   child: Container(
+                    //     // height: double.infinity,
+                    //     color: Colors.red,
+                    //     child: Row(
+                    //       children: <Widget>[
+                    //         IconButton(
+                    //             icon: Icon(Icons.skip_previous), onPressed: null),
+                    //         Expanded(
+                    //           child: Text(
+                    //             widget.entry.name,
+                    //             style: TextStyle(fontSize: 30),
+                    //             maxLines: 20,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ), // Add this code
+                    // ),
+                    // title: Text("ok"),
+
+                    flexibleSpace: FlexibleSpaceBar(
+                      titlePadding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                      title: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width / 1.8),
+                          child: AutoSizeText(
+                            widget.entry.name,
+                            maxLines: 2,
+                          )),
+                      background: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            colorFilter:
+                                ColorFilter.mode(Colors.grey, BlendMode.darken),
+                            image: NetworkImage(widget.entry.banner),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Info'),
+                            Column(
                               children: <Widget>[
-                                SizedBox(height:20),
+                                Text(gameEntry.rating.round().toString()),
                                 CircularPercentIndicator(
+                                  addAutomaticKeepAlive: true,
                                   radius: 120.0,
                                   lineWidth: 13.0,
                                   animation: true,
@@ -90,22 +113,25 @@ class _GameState extends State<Game> {
                                   circularStrokeCap: CircularStrokeCap.round,
                                   progressColor: ratingColor,
                                 ),
-                                SizedBox(height:20),
-                                Container(
-                                  padding: EdgeInsets.all(15),
-                                  color: Colors.black.withOpacity(0.4),
-                                  child: Text(gameEntry.summary, style: TextStyle(fontSize:20),))
                               ],
-                            );
-                          },
+                            )
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                )),
-          ),
-        ],
-      ),
-    );
+                  SliverList(
+                      delegate: SliverChildListDelegate([
+                    Container(
+                        padding: EdgeInsets.all(15),
+                        color: Colors.black,
+                        child: Text(
+                          gameEntry.summary,
+                          style: TextStyle(fontSize: 20),
+                        ))
+                  ]))
+                ],
+              );
+            }));
   }
 }
