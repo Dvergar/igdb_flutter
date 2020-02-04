@@ -47,7 +47,7 @@ class _GameState extends State<Game> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                        padding: const EdgeInsets.fromLTRB(5,10,20,10),
+                        padding: const EdgeInsets.fromLTRB(5, 10, 20, 10),
                         child: Icon(Icons.arrow_back_ios),
                       ),
                       Expanded(
@@ -98,7 +98,14 @@ class _GameState extends State<Game> {
                               progressColor: ratingColor,
                             ),
                             SizedBox(height: 20),
-                            Container(height:10, color:Colors.red),
+                            for (var genre in gameEntry.genres)
+                              InputChip(
+                                label: Text(genre),
+                                backgroundColor: Colors.red,
+                                onPressed: (){},
+                              ),
+                              SizedBox(height: 20),
+                            Container(height: 10, color: Colors.red),
                             Container(
                                 padding: EdgeInsets.all(15),
                                 color: Colors.black,
