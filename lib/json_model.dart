@@ -158,6 +158,7 @@ class Screenshot {
 
 @JsonSerializable()
 class GameEntry {
+  @JsonKey(defaultValue: 0)
   final double rating;
 
   @JsonKey(defaultValue: "No summary")

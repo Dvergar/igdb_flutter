@@ -132,7 +132,7 @@ Map<String, dynamic> _$ScreenshotToJson(Screenshot instance) =>
 
 GameEntry _$GameEntryFromJson(Map<String, dynamic> json) {
   return GameEntry(
-    (json['rating'] as num)?.toDouble(),
+    (json['rating'] as num)?.toDouble() ?? 0,
     (json['genres'] as List)
             ?.map((e) =>
                 e == null ? null : Genre.fromJson(e as Map<String, dynamic>))
