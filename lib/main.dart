@@ -55,9 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const searchStyle = TextStyle(fontSize: 20);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      // ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(18.0),
