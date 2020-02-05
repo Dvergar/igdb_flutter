@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:igdb_flutter/game_bloc.dart';
 import 'package:igdb_flutter/search_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'json_model.dart';
 
 class Game extends StatefulWidget {
   int index;
@@ -16,6 +17,7 @@ class _GameState extends State<Game> {
   @override
   void initState() {
     gameBloc.getGame(widget.entry.id);
+    gameBloc.getGame2(widget.entry.id);
     super.initState();
   }
 
@@ -140,9 +142,18 @@ class _GameState extends State<Game> {
                                 child: DescriptionTextWidget(
                                     text: gameEntry.summary,
                                     summaryLength: 200,
-                                    style: TextStyle(fontSize: 20))
-                                )
+                                    style: TextStyle(fontSize: 20))),
                           ],
+                        );
+                      },
+                    ),
+                    StreamBuilder(
+                      stream: gameBloc.stream2,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) return Text("Loading");
+                        var gameEntry2 = snapshot.data as GameEntry2;
+                        return Container(
+                          child: Text(gameEntry2.rating.toString()),
                         );
                       },
                     ),

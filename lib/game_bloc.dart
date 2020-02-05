@@ -1,38 +1,53 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'json_model.dart';
 import 'main.dart';
 
 class GameBloc {
   final gameController = StreamController.broadcast();
+  final gameController2 = StreamController.broadcast();
 
   Stream get stream => gameController.stream;
+  Stream get stream2 => gameController2.stream;
 
-  Future<List> getRest(String link) async {
+  Future<dynamic> getJson(String link) async {
     var res = await http.get(Uri.encodeFull(link),
         headers: {"Accept": "application/json", "user-key": apiKey});
     print("body ${res.body}");
     if (res.statusCode == 200) {
-      var data = json.decode(res.body);
-      var rest = data as List;
-      print(rest);
-      return rest;
+      return json.decode(res.body);
     }
     return Future.error("NO RESULT");
   }
 
   getGame(int gameId) async {
     print("getGame");
-    var rest = await getRest(
+
+    var json = await getJson(
         "https://api-v3.igdb.com/games/$gameId?fields=rating,summary,genres.name");
 
-    print("REST ${rest[0]}");
+    var data = json as List;
 
-    gameController.sink.add(GameEntry.fromJson(rest[0]));
+    print("JSON ${data[0]}");
+
+    gameController.sink.add(GameEntry.fromJson(data[0]));
+  }
+
+  getGame2(int gameId) async {
+    print("getGame2");
+
+    var json = await getJson(
+        "https://api-v3.igdb.com/games/$gameId?fields=rating,summary,genres.name,involved_companies.company.name");
+
+    print("JSON2 ${json[0]}");
+
+    gameController2.sink.add(GameEntry2.fromJson(json[0]));
   }
 
   void dispose() {
-    gameController.close(); // close our StreamController
+    gameController.close();
+    gameController2.close();
   }
 }
 
@@ -47,7 +62,7 @@ class GameEntry {
 
   factory GameEntry.fromJson(Map<String, dynamic> json) {
     List<String> getGenres(List<dynamic> jsonGenres) {
-      if(jsonGenres == null) return [];
+      if (jsonGenres == null) return [];
       return jsonGenres.map<String>((json) => json['name']).toList();
     }
 
