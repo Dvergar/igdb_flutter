@@ -25,7 +25,7 @@ class SearchBloc {
   Future<SearchEntries> getsearch(String gameName) async {
     print("getsearch");
     var json = await getJson(
-        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
+        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,cover.image_id");
 
     return SearchEntries.fromJson({'entries': json});
   }
