@@ -71,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     onSubmitted: (entry) {
                       searchBloc.search(entry);
-                      searchBloc.search2(entry);
                     },
                     style: searchStyle,
                     decoration: InputDecoration(
@@ -85,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 20),
               Expanded(
                 child: StreamBuilder(
-                    stream: searchBloc.stream2,
+                    stream: searchBloc.stream,
                     builder: (context, snapshot) {
                       var searchEntries = snapshot.data as SearchEntries;
                       return snapshot.data == null
@@ -94,31 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: ListView.builder(
                                   itemCount: searchEntries.entries.length,
                                   itemBuilder: (context, index) {
-                                    var searchEntry = searchEntries.entries[index];
-
-                                    return Wrap(
-                                      children: <Widget>[
-                                        Text(searchEntry.name),
-                                        Text(searchEntry.platform),
-                                      ],
-                                    );
-                                  }));
-                    }),
-              ),
-              Expanded(
-                child: StreamBuilder(
-                    stream: searchBloc.stream,
-                    builder: (context, snapshot) {
-                      var searchEntry = snapshot.data as List<SearchEntry>;
-                      return snapshot.data == null
-                          ? Center(child: CircularProgressIndicator())
-                          : Container(
-                              child: ListView.builder(
-                                  itemCount: searchEntry.length,
-                                  itemBuilder: (context, index) {
-                                    var releasedYear =
-                                        searchEntry[index].releaseDate;
-                                    var deb = searchEntry[index].platform;
+                                    var searchEntry =
+                                        searchEntries.entries[index];
 
                                     return GestureDetector(
                                       onTap: () {
@@ -127,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Game(
-                                                  entry: searchEntry[index],
+                                                  entry: searchEntry,
                                                   index: index)),
                                         );
                                       },
@@ -143,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   Colors.grey,
                                                   BlendMode.darken),
                                               image: NetworkImage(
-                                                  searchEntry[index].banner),
+                                                  searchEntry.banner),
                                               fit: BoxFit.cover,
                                               alignment: Alignment.topCenter,
                                             ),
@@ -160,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   type:
                                                       MaterialType.transparency,
                                                   child: Text(
-                                                    searchEntry[index].name,
+                                                    searchEntry.name,
                                                     style: TextStyle(
                                                         fontSize: 25,
                                                         fontWeight:
@@ -181,9 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         Colors.amber,
                                                     // avatar: Icon(Icons.av_timer),
                                                     label: Text(
-                                                      searchEntry[index]
-                                                          .platform
-                                                          .name,
+                                                      searchEntry.platform,
                                                       style: TextStyle(
                                                           fontSize: 15,
                                                           fontWeight:
@@ -196,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         Colors.black,
                                                     // avatar: Icon(Icons.av_timer),
                                                     label: Text(
-                                                      releasedYear,
+                                                      searchEntry.releaseDate,
                                                       style: TextStyle(
                                                           fontSize: 15),
                                                     ),

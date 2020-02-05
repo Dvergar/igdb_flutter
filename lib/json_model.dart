@@ -20,11 +20,17 @@ class SearchEntries {
 class SearchEntry2 {
   final String name;
   final int id;
+  final Cover cover;
+  List<Screenshot> screenshots;
 
   @JsonKey(defaultValue: [])
   List<Platform> platforms;
 
-  SearchEntry2(this.name, this.id, this.platforms);
+  @JsonKey(defaultValue: [], name: 'release_dates')
+  List<ReleaseDate> releaseDates;
+
+  SearchEntry2(
+      this.name, this.id, this.platforms, this.screenshots, this.cover);
 
   String get platform {
     print("GETPLAFORM");
@@ -33,7 +39,7 @@ class SearchEntry2 {
     for (var platform in platforms) {
       for (var version in platform.versions) {
         print("dates ${version.platformVersionReleaseDates}");
-        if(version.platformVersionReleaseDates == null) continue;
+        if (version.platformVersionReleaseDates == null) continue;
         var tmpDate = version?.platformVersionReleaseDates[0]?.date;
         print("date $tmpDate");
         if (tmpDate != null && tmpDate < date) {
@@ -43,6 +49,27 @@ class SearchEntry2 {
       }
     }
     return platformName;
+  }
+
+  String get releaseDate {
+    return releaseDates.length != 0
+        ? DateTime.fromMillisecondsSinceEpoch(releaseDates[0].date * 1000)
+            .year
+            .toString()
+        : "N/A";
+  }
+
+  String get banner {
+    // SCREENSHOT
+    if (screenshots != null)
+      return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${screenshots[0].imageId}.jpg';
+
+    // OR COVER
+    if (cover != null)
+      return 'https://images.igdb.com/igdb/image/upload/t_screenshot_med/${cover.imageId}.jpg';
+
+    // OR PLACEHOLDER
+    return 'https://i.picsum.photos/id/15/400/200.jpg?blur=10';
   }
 
   factory SearchEntry2.fromJson(Map<String, dynamic> json) =>
@@ -88,6 +115,43 @@ class PlatformVersionReleaseDate {
       _$PlatformVersionReleaseDateFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlatformVersionReleaseDateToJson(this);
+}
+
+@JsonSerializable()
+class ReleaseDate {
+  final int date;
+
+  ReleaseDate(this.date);
+
+  factory ReleaseDate.fromJson(Map<String, dynamic> json) =>
+      _$ReleaseDateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReleaseDateToJson(this);
+}
+
+@JsonSerializable()
+class Cover {
+  @JsonKey(name: "image_id")
+  final String imageId;
+
+  Cover(this.imageId);
+
+  factory Cover.fromJson(Map<String, dynamic> json) => _$CoverFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CoverToJson(this);
+}
+
+@JsonSerializable()
+class Screenshot {
+  @JsonKey(name: "image_id")
+  final String imageId;
+
+  Screenshot(this.imageId);
+
+  factory Screenshot.fromJson(Map<String, dynamic> json) =>
+      _$ScreenshotFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ScreenshotToJson(this);
 }
 
 ////////////////////////////////// GAME

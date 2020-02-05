@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:igdb_flutter/game_bloc.dart';
-import 'package:igdb_flutter/search_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'json_model.dart';
 
 class Game extends StatefulWidget {
   int index;
-  SearchEntry entry;
+  SearchEntry2 entry;
   Game({Key key, this.entry, this.index}) : super(key: key);
 
   @override
