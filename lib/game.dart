@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:igdb_flutter/game_bloc.dart';
 import 'package:igdb_flutter/search_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+
 import 'json_model.dart';
 
 class Game extends StatefulWidget {
@@ -17,19 +18,12 @@ class _GameState extends State<Game> {
   @override
   void initState() {
     gameBloc.getGame(widget.entry.id);
-    gameBloc.getGame2(widget.entry.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      // extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   title: Text("OK LOL"),
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -120,7 +114,7 @@ class _GameState extends State<Game> {
                                                 right: 8.0),
                                             child: InputChip(
                                               label: Text(
-                                                genre,
+                                                genre.name,
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight:
@@ -144,24 +138,6 @@ class _GameState extends State<Game> {
                                     summaryLength: 200,
                                     style: TextStyle(fontSize: 20))),
                           ],
-                        );
-                      },
-                    ),
-                    StreamBuilder(
-                      stream: gameBloc.stream2,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (!snapshot.hasData) return Text("Loading");
-                        var gameEntry2 = snapshot.data as GameEntry2;
-                        return Container(
-                          child: Column(
-                            children: <Widget>[
-                              Text(gameEntry2.rating.toString()),
-                              Text(gameEntry2.summary),
-                              for(var genre in gameEntry2.genres)
-                                Text(genre.name)
-                                
-                            ],
-                          ),
                         );
                       },
                     ),

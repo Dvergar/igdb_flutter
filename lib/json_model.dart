@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'json_model.g.dart';
 
 @JsonSerializable()
-class GameEntry2 {
+class GameEntry {
   final double rating;
 
   @JsonKey(defaultValue: "No summary")
@@ -12,9 +12,9 @@ class GameEntry2 {
   @JsonKey(defaultValue: [])
   List<Genre> genres;
 
-  GameEntry2(this.rating, this.genres, this.summary);
+  GameEntry(this.rating, this.genres, this.summary);
 
-  factory GameEntry2.fromJson(Map<String, dynamic> json) =>
+  factory GameEntry.fromJson(Map<String, dynamic> json) =>
       _$GameEntry2FromJson(json);
 
   Map<String, dynamic> toJson() => _$GameEntry2ToJson(this);
@@ -27,8 +27,7 @@ class Genre {
 
   Genre(this.name);
 
-  factory Genre.fromJson(Map<String, dynamic> json) =>
-      _$GenreFromJson(json);
+  factory Genre.fromJson(Map<String, dynamic> json) => _$GenreFromJson(json);
 
   Map<String, dynamic> toJson() => _$GenreToJson(this);
 }
