@@ -6,7 +6,7 @@ import 'json_model.dart';
 
 class Game extends StatefulWidget {
   int index;
-  SearchEntry2 entry;
+  SearchEntry entry;
   Game({Key key, this.entry, this.index}) : super(key: key);
 
   @override
@@ -65,7 +65,7 @@ class _GameState extends State<Game> {
                     StreamBuilder(
                       stream: gameBloc.stream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (!snapshot.hasData) return Text("Loading");
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
 
                         var gameEntry = snapshot.data as GameEntry;
                         var ratingColor = Colors.red;

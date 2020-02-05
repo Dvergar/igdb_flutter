@@ -10,7 +10,7 @@ SearchEntries _$SearchEntriesFromJson(Map<String, dynamic> json) {
   return SearchEntries(
     (json['entries'] as List)
         ?.map((e) =>
-            e == null ? null : SearchEntry2.fromJson(e as Map<String, dynamic>))
+            e == null ? null : SearchEntry.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
@@ -20,8 +20,8 @@ Map<String, dynamic> _$SearchEntriesToJson(SearchEntries instance) =>
       'entries': instance.entries,
     };
 
-SearchEntry2 _$SearchEntry2FromJson(Map<String, dynamic> json) {
-  return SearchEntry2(
+SearchEntry _$SearchEntryFromJson(Map<String, dynamic> json) {
+  return SearchEntry(
     json['name'] as String,
     json['id'] as int,
     (json['platforms'] as List)
@@ -44,7 +44,7 @@ SearchEntry2 _$SearchEntry2FromJson(Map<String, dynamic> json) {
       [];
 }
 
-Map<String, dynamic> _$SearchEntry2ToJson(SearchEntry2 instance) =>
+Map<String, dynamic> _$SearchEntryToJson(SearchEntry instance) =>
     <String, dynamic>{
       'name': instance.name,
       'id': instance.id,

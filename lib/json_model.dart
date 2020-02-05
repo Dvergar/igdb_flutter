@@ -6,7 +6,7 @@ part 'json_model.g.dart';
 
 @JsonSerializable()
 class SearchEntries {
-  List<SearchEntry2> entries;
+  List<SearchEntry> entries;
 
   SearchEntries(this.entries);
 
@@ -17,7 +17,7 @@ class SearchEntries {
 }
 
 @JsonSerializable()
-class SearchEntry2 {
+class SearchEntry {
   final String name;
   final int id;
   final Cover cover;
@@ -29,7 +29,7 @@ class SearchEntry2 {
   @JsonKey(defaultValue: [], name: 'release_dates')
   List<ReleaseDate> releaseDates;
 
-  SearchEntry2(
+  SearchEntry(
       this.name, this.id, this.platforms, this.screenshots, this.cover);
 
   String get platform {
@@ -76,10 +76,10 @@ class SearchEntry2 {
     return 'https://i.picsum.photos/id/15/400/200.jpg?blur=10';
   }
 
-  factory SearchEntry2.fromJson(Map<String, dynamic> json) =>
-      _$SearchEntry2FromJson(json);
+  factory SearchEntry.fromJson(Map<String, dynamic> json) =>
+      _$SearchEntryFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SearchEntry2ToJson(this);
+  Map<String, dynamic> toJson() => _$SearchEntryToJson(this);
 }
 
 @JsonSerializable()
