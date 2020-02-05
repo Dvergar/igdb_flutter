@@ -37,12 +37,12 @@ class _GameState extends State<Game> {
             children: <Widget>[
               Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.fromLTRB(20,20,20,0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                          padding: const EdgeInsets.fromLTRB(5, 10, 20, 10),
+                          padding: const EdgeInsets.fromLTRB(5, 10, 20, 0),
                           child: IconButton(
                               icon: Icon(Icons.arrow_back_ios),
                               onPressed: () {
@@ -74,6 +74,18 @@ class _GameState extends State<Game> {
 
                         return Column(
                           children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left:45.0),
+                              child: Wrap(children: [
+                                for (var involvedCompany
+                                    in gameEntry.involvedCompanies)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right:20.0),
+                                    child: Text(involvedCompany.company.name),
+                                  ),
+                                  
+                              ]),
+                            ),
                             SizedBox(height: 20),
                             Row(
                                 mainAxisAlignment:

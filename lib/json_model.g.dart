@@ -139,6 +139,12 @@ GameEntry _$GameEntryFromJson(Map<String, dynamic> json) {
             ?.toList() ??
         [],
     json['summary'] as String ?? 'No summary',
+    (json['involved_companies'] as List)
+            ?.map((e) => e == null
+                ? null
+                : InvolvedCompany.fromJson(e as Map<String, dynamic>))
+            ?.toList() ??
+        [],
   );
 }
 
@@ -146,6 +152,7 @@ Map<String, dynamic> _$GameEntryToJson(GameEntry instance) => <String, dynamic>{
       'rating': instance.rating,
       'summary': instance.summary,
       'genres': instance.genres,
+      'involved_companies': instance.involvedCompanies,
     };
 
 Genre _$GenreFromJson(Map<String, dynamic> json) {
@@ -166,3 +173,26 @@ Map<String, dynamic> _$GenreToJson(Genre instance) {
   writeNotNull('name', instance.name);
   return val;
 }
+
+InvolvedCompany _$InvolvedCompanyFromJson(Map<String, dynamic> json) {
+  return InvolvedCompany(
+    json['company'] == null
+        ? null
+        : Company.fromJson(json['company'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$InvolvedCompanyToJson(InvolvedCompany instance) =>
+    <String, dynamic>{
+      'company': instance.company,
+    };
+
+Company _$CompanyFromJson(Map<String, dynamic> json) {
+  return Company(
+    json['name'] as String,
+  );
+}
+
+Map<String, dynamic> _$CompanyToJson(Company instance) => <String, dynamic>{
+      'name': instance.name,
+    };

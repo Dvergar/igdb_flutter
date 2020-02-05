@@ -167,7 +167,10 @@ class GameEntry {
   @JsonKey(defaultValue: [])
   List<Genre> genres;
 
-  GameEntry(this.rating, this.genres, this.summary);
+  @JsonKey(defaultValue: [], name: "involved_companies")
+  List<InvolvedCompany> involvedCompanies;
+
+  GameEntry(this.rating, this.genres, this.summary, this.involvedCompanies);
 
   factory GameEntry.fromJson(Map<String, dynamic> json) =>
       _$GameEntryFromJson(json);
@@ -185,4 +188,28 @@ class Genre {
   factory Genre.fromJson(Map<String, dynamic> json) => _$GenreFromJson(json);
 
   Map<String, dynamic> toJson() => _$GenreToJson(this);
+}
+
+@JsonSerializable()
+class InvolvedCompany {
+  final Company company;
+
+  InvolvedCompany(this.company);
+
+  factory InvolvedCompany.fromJson(Map<String, dynamic> json) =>
+      _$InvolvedCompanyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InvolvedCompanyToJson(this);
+}
+
+@JsonSerializable()
+class Company {
+  final String name;
+
+  Company(this.name);
+
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      _$CompanyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CompanyToJson(this);
 }
