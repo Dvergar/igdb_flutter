@@ -52,11 +52,15 @@ class SearchEntry2 {
   }
 
   String get releaseDate {
-    return releaseDates.length != 0
-        ? DateTime.fromMillisecondsSinceEpoch(releaseDates[0].date * 1000)
-            .year
-            .toString()
-        : "N/A";
+    if (releaseDates.length == 0) return "N/A";
+    var date = 9999999999999999;
+
+    // TODO : Use reduce ?
+    for (var tmpDate in releaseDates) {
+      if (tmpDate.date < date) date = tmpDate.date;
+    }
+
+    return DateTime.fromMillisecondsSinceEpoch(date * 1000).year.toString();
   }
 
   String get banner {
