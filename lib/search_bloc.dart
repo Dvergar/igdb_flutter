@@ -1,16 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'json_model.dart';
 import 'main.dart';
 
 class SearchBloc {
   final searchController = StreamController.broadcast();
+  final searchController2 = StreamController.broadcast();
 
   Stream get stream => searchController.stream;
+  Stream get stream2 => searchController2.stream;
 
   void search(String entry) {
     getSearch(entry).then((entries) => searchController.sink.add(entries));
   }
+
+    void search2(String entry) {
+    getSearch2(entry).then((entries) => searchController2.sink.add(entries));
+  }
+
 
   Future<List> getRest(String link) async {
     var res = await http.get(Uri.encodeFull(link),
@@ -32,12 +40,34 @@ class SearchBloc {
 
     List<SearchEntry> searchEntries =
         rest.map<SearchEntry>((json) => SearchEntry.fromJson(json)).toList();
-    print("List Size: ${searchEntries.length}");
     return searchEntries;
   }
 
+
+
+  Future<dynamic> getJson(String link) async {
+    var res = await http.get(Uri.encodeFull(link),
+        headers: {"Accept": "application/json", "user-key": apiKey});
+    // print("body ${res.body}");
+    if (res.statusCode == 200) {
+      return json.decode(res.body);
+    }
+    return Future.error("NO RESULT");
+  }
+
+  Future<SearchEntries> getSearch2(String gameName) async {
+    print("getSearch2");
+    var json = await getJson(
+        "https://api-v3.igdb.com/games/?search=$gameName&fields=name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,platforms.platform_logo.image_id,cover.image_id");
+
+    // searchController2.sink.add(SearchEntries.fromJson(json[0]));
+    return SearchEntries.fromJson({'entries':json});
+  }
+
+
   void dispose() {
-    searchController.close(); // close our StreamController
+    searchController.close();
+    searchController2.close();
   }
 }
 
@@ -87,7 +117,6 @@ class SearchEntry {
     }
 
     getReleaseDate(List releaseDates) {
-      print("RELDEBUG $releaseDates");
       if (releaseDates == null) return "N/A";
       if (releaseDates[0]['date'] == null) return "N/A";
 

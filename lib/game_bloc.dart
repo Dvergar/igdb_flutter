@@ -27,7 +27,7 @@ class GameBloc {
 
     print("JSON2 ${json[0]}");
 
-    gameController.sink.add(GameEntry2.fromJson(json[0]));
+    gameController.sink.add(GameEntry.fromJson(json[0]));
   }
 
   void dispose() {

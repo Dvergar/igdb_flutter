@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:igdb_flutter/game.dart';
+import 'package:igdb_flutter/json_model.dart';
 import 'search_bloc.dart';
 
 var apiKey = "";
@@ -68,17 +69,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(18.0),
                       color: Color(0xff424242)),
                   child: TextField(
-                    onSubmitted: (entry) => searchBloc.search(entry),
+                    onSubmitted: (entry) {
+                      searchBloc.search(entry);
+                      searchBloc.search2(entry);
+                    },
                     style: searchStyle,
                     decoration: InputDecoration(
-                        border: InputBorder.none,
-                        icon: Icon(Icons.search),
-                        hintText: "SEARCH GAMES",
-                        hintStyle: searchStyle,
-                        labelStyle: searchStyle,
-                        ),
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                      hintText: "SEARCH GAMES",
+                      hintStyle: searchStyle,
+                      labelStyle: searchStyle,
+                    ),
                   )),
               SizedBox(height: 20),
+              Expanded(
+                child: StreamBuilder(
+                    stream: searchBloc.stream2,
+                    builder: (context, snapshot) {
+                      var searchEntries = snapshot.data as SearchEntries;
+                      return snapshot.data == null
+                          ? Center(child: CircularProgressIndicator())
+                          : Container(
+                              child: ListView.builder(
+                                  itemCount: searchEntries.entries.length,
+                                  itemBuilder: (context, index) {
+                                    var searchEntry = searchEntries.entries[index];
+
+                                    return Wrap(
+                                      children: <Widget>[
+                                        Text(searchEntry.name),
+                                        Text(searchEntry.platform),
+                                      ],
+                                    );
+                                  }));
+                    }),
+              ),
               Expanded(
                 child: StreamBuilder(
                     stream: searchBloc.stream,
@@ -92,10 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   itemBuilder: (context, index) {
                                     var releasedYear =
                                         searchEntry[index].releaseDate;
-                                        var deb = searchEntry[index]
-                                                          .platform
-                                                          ;
-                                                          print("DEBUUUUUUUUUUUG $deb");
+                                    var deb = searchEntry[index].platform;
 
                                     return GestureDetector(
                                       onTap: () {
@@ -149,7 +172,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                               ),
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: <Widget>[
                                                   InputChip(
                                                     backgroundColor:
