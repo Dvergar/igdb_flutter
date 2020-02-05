@@ -153,7 +153,15 @@ class _GameState extends State<Game> {
                         if (!snapshot.hasData) return Text("Loading");
                         var gameEntry2 = snapshot.data as GameEntry2;
                         return Container(
-                          child: Text(gameEntry2.rating.toString()),
+                          child: Column(
+                            children: <Widget>[
+                              Text(gameEntry2.rating.toString()),
+                              Text(gameEntry2.summary),
+                              for(var genre in gameEntry2.genres)
+                                Text(genre.name)
+                                
+                            ],
+                          ),
                         );
                       },
                     ),
