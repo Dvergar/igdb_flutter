@@ -9,6 +9,26 @@ class SearchBloc {
 
   Stream get stream => searchcontroller.stream;
 
+  Future<dynamic> getFeedJson() async {
+    var res = await http.post('https://api-v3.igdb.com/games/',
+        headers: {"Accept": "application/json", "user-key": apiKey},
+        body:
+            "fields name,screenshots.image_id,release_dates.date,platforms.versions.platform_version_release_dates.date,platforms.abbreviation,cover.image_id;"
+            "sort popularity desc;");
+
+    if (res.statusCode == 200) {
+      return json.decode(res.body);
+    }
+    return Future.error("NO RESULT");
+  }
+
+  void feed() {
+    getFeedJson().then((json) {
+      var entries = SearchEntries.fromJson({'entries': json});
+      searchcontroller.sink.add(entries);
+    });
+  }
+
   void search(String entry) {
     getsearch(entry).then((entries) => searchcontroller.sink.add(entries));
   }

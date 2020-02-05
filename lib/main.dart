@@ -45,8 +45,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var searched = false;
+
   @override
   void initState() {
+    searchBloc.feed();
     super.initState();
   }
 
@@ -68,6 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     onSubmitted: (entry) {
                       searchBloc.search(entry);
+                      setState(() {
+                        searched = true;
+                      });
                     },
                     style: searchStyle,
                     decoration: InputDecoration(
@@ -78,7 +84,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       labelStyle: searchStyle,
                     ),
                   )),
-              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 25, 12, 5),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      searched ? "RESULTS" : "POPULAR GAMES",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                      ),
+                    )),
+              ),
               Expanded(
                 child: StreamBuilder(
                     stream: searchBloc.stream,
