@@ -5,9 +5,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'json_model.dart';
 
 class Game extends StatefulWidget {
-  int index;
+  String tag;
   SearchEntry entry;
-  Game({Key key, this.entry, this.index}) : super(key: key);
+  Game({Key key, this.entry, this.tag}) : super(key: key);
 
   @override
   _GameState createState() => _GameState();
@@ -50,7 +50,7 @@ class _GameState extends State<Game> {
                               })),
                       Expanded(
                         child: Hero(
-                            tag: "game-name-${widget.index}",
+                            tag: widget.tag,
                             child: Material(
                                 type: MaterialType.transparency,
                                 child: Text(widget.entry.name,

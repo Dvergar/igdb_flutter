@@ -115,7 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       itemBuilder: (context, index) {
                                         var searchEntry =
                                             searchEntries.entries[index];
-
+                                        var randomNumber =
+                                            Random().nextInt(1000);
+                                        var gameTag =
+                                            "game-name-$index-$randomNumber";
                                         return GestureDetector(
                                           onTap: () {
                                             Navigator.push(
@@ -123,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               MaterialPageRoute(
                                                   builder: (context) => Game(
                                                       entry: searchEntry,
-                                                      index: index)),
+                                                      tag: gameTag)),
                                             );
                                           },
                                           child: Card(
@@ -152,12 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Hero(
-                                                    tag: "game-name-$index",
+                                                    tag: gameTag,
                                                     child: Material(
                                                       type: MaterialType
                                                           .transparency,
                                                       child: Text(
-                                                        searchEntry.name,
+                                                        "${searchEntry.name} $index",
                                                         style: TextStyle(
                                                             fontSize: 25,
                                                             fontWeight:
