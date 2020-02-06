@@ -111,7 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               : Container(
                                   key: ValueKey<int>(Random().nextInt(100)),
                                   child: ListView.builder(
-                                      key: ValueKey<int>(Random().nextInt(100)),
                                       itemCount: searchEntries.entries.length,
                                       itemBuilder: (context, index) {
                                         var searchEntry =
@@ -128,8 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                             );
                                           },
                                           child: Card(
-                                            key: ValueKey<int>(
-                                                Random().nextInt(100)),
                                             child: Container(
                                               height: 120,
                                               padding: EdgeInsets.all(9),
