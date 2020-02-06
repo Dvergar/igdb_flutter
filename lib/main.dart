@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:igdb_flutter/game.dart';
 import 'package:igdb_flutter/json_model.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'search_bloc.dart';
 
 var apiKey = "";
@@ -130,82 +131,107 @@ class _MyHomePageState extends State<MyHomePage> {
                                             );
                                           },
                                           child: Card(
-                                            child: Container(
-                                              height: 120,
-                                              padding: EdgeInsets.all(9),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(18.0),
-                                                image: DecorationImage(
-                                                  colorFilter: ColorFilter.mode(
-                                                      Colors.grey,
-                                                      BlendMode.darken),
-                                                  image: NetworkImage(
-                                                      searchEntry.banner),
-                                                  fit: BoxFit.cover,
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                ),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Hero(
-                                                    tag: gameTag,
-                                                    child: Material(
-                                                      type: MaterialType
-                                                          .transparency,
-                                                      child: Text(
-                                                        "${searchEntry.name} $index",
-                                                        style: TextStyle(
-                                                            fontSize: 25,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
+                                            color: Colors.grey,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              child: Container(
+                                                height: 120,
+                                                child: Stack(
+                                                  children: <Widget>[
+                                                    ColorFiltered(
+                                                      colorFilter:
+                                                          ColorFilter.mode(
+                                                              Colors.grey,
+                                                              BlendMode.darken),
+                                                      child: FadeInImage
+                                                          .memoryNetwork(
+                                                        width: double.infinity,
+                                                        height: double.infinity,
+                                                        fit: BoxFit.cover,
+                                                        placeholder:
+                                                            kTransparentImage,
+                                                        image:
+                                                            searchEntry.banner,
                                                       ),
                                                     ),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      InputChip(
-                                                        backgroundColor:
-                                                            Colors.amber,
-                                                        // avatar: Icon(Icons.av_timer),
-                                                        label: Text(
-                                                          searchEntry.platform,
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        onPressed: () {},
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              9.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Hero(
+                                                            tag: gameTag,
+                                                            child: Material(
+                                                              type: MaterialType
+                                                                  .transparency,
+                                                              child: Text(
+                                                                "${searchEntry.name} $index",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        25,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              InputChip(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .amber,
+                                                                // avatar: Icon(Icons.av_timer),
+                                                                label: Text(
+                                                                  searchEntry
+                                                                      .platform,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                onPressed:
+                                                                    () {},
+                                                              ),
+                                                              InputChip(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                // avatar: Icon(Icons.av_timer),
+                                                                label: Text(
+                                                                  searchEntry
+                                                                      .releaseDate,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15),
+                                                                ),
+                                                                onPressed:
+                                                                    () {},
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
-                                                      InputChip(
-                                                        backgroundColor:
-                                                            Colors.black,
-                                                        // avatar: Icon(Icons.av_timer),
-                                                        label: Text(
-                                                          searchEntry
-                                                              .releaseDate,
-                                                          style: TextStyle(
-                                                              fontSize: 15),
-                                                        ),
-                                                        onPressed: () {},
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
 
@@ -214,7 +240,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               borderRadius:
                                                   BorderRadius.circular(18.0),
                                             ),
-                                            elevation: 5,
+                                            // elevation: 5,
                                             margin: EdgeInsets.symmetric(
                                                 vertical: 10),
                                           ),
