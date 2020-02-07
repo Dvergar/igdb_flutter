@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'json_model.dart';
-import 'main.dart';
+import 'api_factory.dart';
 
 class SearchBloc {
   final searchcontroller = StreamController.broadcast();
