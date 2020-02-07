@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
         return snapshot.data == null
             ? Center(child: CircularProgressIndicator())
             : MaterialApp(
-                title: 'IGDB Flutter',
+                title: 'Index Ludum',
                 theme: ThemeData(
                     primarySwatch: Colors.blue, brightness: Brightness.dark),
-                home: MyHomePage(title: 'IGDB Flutter'),
+                home: MyHomePage(title: 'Index Ludum'),
               );
       },
     );
