@@ -4,4 +4,4 @@
 A game database app powered by [IGDB](https://www.igdb.com).
 
 ## Screenshot
-<img src="https://raw.githubusercontent.com/Dvergar/igdb_flutter/master/screenshot.png" width="400">
+<img src="https://raw.githubusercontent.com/Dvergar/igdb_flutter/master/screenshot.jpg" width="400">
