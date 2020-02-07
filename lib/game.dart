@@ -6,8 +6,8 @@ import 'game_bloc.dart';
 import 'json_model.dart';
 
 class Game extends StatefulWidget {
-  String tag;
-  SearchEntry entry;
+  final String tag;
+  final SearchEntry entry;
   Game({Key key, this.entry, this.tag}) : super(key: key);
 
   @override
