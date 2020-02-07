@@ -42,3 +42,4 @@ deploy_locally.bat
 release.bat
 *.psd
 apk
+google-services.json
