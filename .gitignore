@@ -37,3 +37,8 @@ lib/generated_plugin_registrant.dart
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 assets/api.key
+android/key.properties
+deploy_locally.bat
+release.bat
+*.psd
+apk
