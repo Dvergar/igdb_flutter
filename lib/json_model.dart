@@ -33,15 +33,14 @@ class SearchEntry {
       this.name, this.id, this.platforms, this.screenshots, this.cover);
 
   String get platform {
-    print("GETPLAFORM");
     var platformName = "N/A";
     var date = 9999999999999999;
     for (var platform in platforms) {
       for (var version in platform.versions) {
-        print("dates ${version.platformVersionReleaseDates}");
+        // print("dates ${version.platformVersionReleaseDates}");
         if (version.platformVersionReleaseDates == null) continue;
         var tmpDate = version?.platformVersionReleaseDates[0]?.date;
-        print("date $tmpDate");
+        // print("date $tmpDate");
         if (tmpDate != null && tmpDate < date) {
           date = tmpDate;
           platformName = platform.abbreviation;
