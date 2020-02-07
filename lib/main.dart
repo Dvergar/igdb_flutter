@@ -8,7 +8,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'search_bloc.dart';
 
-var apiKey = "";
+String apiKey;
 
 void main() {
   runApp(MyApp());
@@ -17,11 +17,13 @@ void main() {
 class MyApp extends StatelessWidget {
   Future<String> loadAPIKey() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.activateFetched();
     await remoteConfig.fetch();
+    await remoteConfig.activateFetched();
+
     // await Future.delayed(const Duration(seconds : 5));
 
     var apiKey = remoteConfig.getString('igdb_api_key');
+    print("APIKEy $apiKey");
 
     return apiKey;
   }
