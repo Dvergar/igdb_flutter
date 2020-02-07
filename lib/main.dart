@@ -5,26 +5,32 @@ import 'package:flutter/services.dart';
 import 'package:igdb_flutter/game.dart';
 import 'package:igdb_flutter/json_model.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'search_bloc.dart';
 
 var apiKey = "";
-Future<String> loadAPIKey() async {
-  return await rootBundle.loadString('assets/api.key');
-}
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  Future<String> loadAPIKey() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.activateFetched();
+    await remoteConfig.fetch();
+
+    var apiKey = remoteConfig.getString('igdb_api_key');
+
+    return apiKey;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: loadAPIKey(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          apiKey = snapshot.data;
-        }
+        if (snapshot.hasData) apiKey = snapshot.data;
         return snapshot.data == null
             ? Center(child: CircularProgressIndicator())
             : MaterialApp(
@@ -53,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     searchBloc.feed();
+
     super.initState();
   }
 
