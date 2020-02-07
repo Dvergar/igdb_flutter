@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     await remoteConfig.activateFetched();
     await remoteConfig.fetch();
+    // await Future.delayed(const Duration(seconds : 5));
 
     var apiKey = remoteConfig.getString('igdb_api_key');
 
@@ -180,7 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               type: MaterialType
                                                                   .transparency,
                                                               child: Text(
-                                                                "${searchEntry.name} $index",
+                                                                searchEntry
+                                                                    .name,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         25,
