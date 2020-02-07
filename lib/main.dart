@@ -1,11 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:igdb_flutter/api_factory.dart';
-import 'package:igdb_flutter/game.dart';
-import 'package:igdb_flutter/json_model.dart';
+
 import 'package:transparent_image/transparent_image.dart';
+
+import 'api_factory.dart';
+import 'game.dart';
+import 'json_model.dart';
 import 'search_bloc.dart';
 
 void main() {

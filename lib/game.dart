@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:igdb_flutter/game_bloc.dart';
+
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import 'game_bloc.dart';
 import 'json_model.dart';
 
 class Game extends StatefulWidget {
@@ -37,7 +38,7 @@ class _GameState extends State<Game> {
             children: <Widget>[
               Container(
                   width: double.infinity,
-                  padding: EdgeInsets.fromLTRB(20,20,20,0),
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -65,7 +66,8 @@ class _GameState extends State<Game> {
                     StreamBuilder(
                       stream: gameBloc.stream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                        if (!snapshot.hasData)
+                          return Center(child: CircularProgressIndicator());
 
                         var gameEntry = snapshot.data as GameEntry;
                         var ratingColor = Colors.red;
@@ -75,15 +77,14 @@ class _GameState extends State<Game> {
                         return Column(
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(left:45.0),
+                              padding: const EdgeInsets.only(left: 45.0),
                               child: Wrap(children: [
                                 for (var involvedCompany
                                     in gameEntry.involvedCompanies)
                                   Padding(
-                                    padding: const EdgeInsets.only(right:20.0),
+                                    padding: const EdgeInsets.only(right: 20.0),
                                     child: Text(involvedCompany.company.name),
                                   ),
-                                  
                               ]),
                             ),
                             SizedBox(height: 20),
