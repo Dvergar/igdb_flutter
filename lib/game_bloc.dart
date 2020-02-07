@@ -13,7 +13,6 @@ class GameBloc {
   Future<dynamic> getJson(String link) async {
     var res = await http.get(Uri.encodeFull(link),
         headers: {"Accept": "application/json", "user-key": apiKey});
-    print("body ${res.body}");
     if (res.statusCode == 200) {
       return json.decode(res.body);
     }
@@ -21,12 +20,8 @@ class GameBloc {
   }
 
   getGame(int gameId) async {
-    print("getGame2");
-
     var json = await getJson(
         "https://api-v3.igdb.com/games/$gameId?fields=rating,summary,genres.name,involved_companies.company.name");
-
-    print("JSON2 ${json[0]}");
 
     gameController.sink.add(GameEntry.fromJson(json[0]));
   }
