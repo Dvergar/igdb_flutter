@@ -29,8 +29,7 @@ class SearchEntry {
   @JsonKey(defaultValue: [], name: 'release_dates')
   List<ReleaseDate> releaseDates;
 
-  SearchEntry(
-      this.name, this.id, this.platforms, this.screenshots, this.cover);
+  SearchEntry(this.name, this.id, this.platforms, this.screenshots, this.cover);
 
   String get platform {
     var platformName = "N/A";
@@ -58,6 +57,10 @@ class SearchEntry {
     for (var tmpDate in releaseDates) {
       if (tmpDate.date < date) date = tmpDate.date;
     }
+
+    // TODEBUG
+    var theDate = releaseDates.reduce((earliestDate, currentDate) =>
+        currentDate.date < earliestDate.date ? currentDate : earliestDate);
 
     return DateTime.fromMillisecondsSinceEpoch(date * 1000).year.toString();
   }
