@@ -193,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 backgroundColor:
                                                                     Colors
                                                                         .amber,
-                                                                // avatar: Icon(Icons.av_timer),
                                                                 label: Text(
                                                                   searchEntry
                                                                       .platform,
@@ -211,7 +210,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 backgroundColor:
                                                                     Colors
                                                                         .black,
-                                                                // avatar: Icon(Icons.av_timer),
                                                                 label: Text(
                                                                   searchEntry
                                                                       .releaseDate,
@@ -231,13 +229,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                               ),
                                             ),
-
-                                            // Stack(
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18.0),
                                             ),
-                                            // elevation: 5,
                                             margin: EdgeInsets.symmetric(
                                                 vertical: 10),
                                           ),
